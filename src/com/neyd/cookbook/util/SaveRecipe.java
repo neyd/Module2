@@ -38,7 +38,6 @@ public class SaveRecipe {
             scanner = new Scanner(new File("recipe.txt"));
         } catch (FileNotFoundException ignored) {
         }
-        assert scanner != null;
         int size = Integer.parseInt(scanner.nextLine());
         for (int i = 0; i < size; i++) {
             String name = scanner.nextLine();
@@ -48,30 +47,56 @@ public class SaveRecipe {
                 String product = scanner.nextLine();
                 products.add(product);
             }
-            if (size1 == 3) {
-                String product1 = products.get(0);
-                String product2 = products.get(1);
-                String product3 = products.get(2);
-                savedContacts.add(
-                        new Recipe().setName(name).
-                                setDescription(discription).
-                                addProduct(product1).
-                                addProduct(product2).
-                                addProduct(product3)
-                );
-            } else if (size1 == 4) {
-                String product1 = products.get(0);
-                String product2 = products.get(1);
-                String product3 = products.get(2);
-                String product4 = products.get(3);
-                savedContacts.add(
-                        new Recipe().setName(name).
-                                setDescription(discription).
-                                addProduct(product1).
-                                addProduct(product2).
-                                addProduct(product3).
-                                addProduct(product4)
-                );
+            String product1;
+            String product2;
+            String product3;
+            String product4;
+            switch (size1){
+                case 1:
+                    product1 = products.get(0);
+                    savedContacts.add(
+                            new Recipe().setName(name).
+                                    setDescription(discription).
+                                    addProduct(product1)
+                    );
+                    break;
+                case 2:
+                    product1 = products.get(0);
+                    product2 = products.get(1);
+                    savedContacts.add(
+                            new Recipe().setName(name).
+                                    setDescription(discription).
+                                    addProduct(product1).
+                                    addProduct(product2)
+                    );
+                    break;
+                case 3:
+                    product1 = products.get(0);
+                    product2 = products.get(1);
+                    product3 = products.get(2);
+                    savedContacts.add(
+                            new Recipe().setName(name).
+                                    setDescription(discription).
+                                    addProduct(product1).
+                                    addProduct(product2).
+                                    addProduct(product3)
+                    );
+                    break;
+                case 4:
+                    product1 = products.get(0);
+                    product2 = products.get(1);
+                    product3 = products.get(2);
+                    product4 = products.get(3);
+                    savedContacts.add(
+                            new Recipe().setName(name).
+                                    setDescription(discription).
+                                    addProduct(product1).
+                                    addProduct(product2).
+                                    addProduct(product3).
+                                    addProduct(product4)
+                    );
+                    products.clear();
+                    break;
             }
         }
         return savedContacts;

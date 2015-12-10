@@ -62,31 +62,35 @@ public class Main {
 
     private static void LoadingScreen() {
         Scanner scanner = new Scanner(System.in);
-        boolean s = false;
+        int choice = 0;
+        while (true){
         System.out.println("1.Загрузити файл 'recipe.txt'");
         System.out.println("2.Згенерувати рецепти");
-        int choice = 0;
-        try {
-            choice = Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Ви ввели неправильне число");
-            System.out.println();
-        }
-        switch (choice) {
-            case 1:
-                cookBook.loadRecipesWithFile();
-                break;
-            case 2:
-                System.out.println("Скільки хочете сгенерувати рецептів?" + " (" + RecipeGenerator.nameOfRecipe.length + ")");
-                int count = 0;
-                try{
-                    count = Integer.parseInt(scanner.nextLine());
-                }catch (NumberFormatException e){
-                    System.out.println("Ви ввели неправильне число");
-                }
-                cookBook.loadRecipesWithGenerator(count);
-                System.out.println(RecipeGenerator.nameOfRecipe.length + " рецептів згенеровано");
-                break;
+            try {
+                choice = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Ви ввели неправильне число");
+                System.out.println();
+            }
+            switch (choice) {
+                case 1:
+                    cookBook.loadRecipesWithFile();
+                    return;
+                case 2:
+                    System.out.println("Скільки хочете сгенерувати рецептів?" + " (" + RecipeGenerator.nameOfRecipe.length + ")");
+                    int count = 0;
+                    try {
+                        count = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Ви ввели неправильне число");
+                    }
+                    cookBook.loadRecipesWithGenerator(count);
+                    if (count >= RecipeGenerator.nameOfRecipe.length) {
+                        count = RecipeGenerator.nameOfRecipe.length;
+                    }
+                    System.out.println(count + " рецептів згенеровано");
+                    return;
+            }
         }
     }
 
