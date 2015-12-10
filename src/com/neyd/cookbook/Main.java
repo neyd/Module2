@@ -12,18 +12,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-/**
+/**клас Мейн
  * Created by Zheka on 08.12.2015.
  */
 public class Main {
-    private static Scanner scanner;
     private static CookBook cookBook;
 
 
     public static void main(String[] args) throws FileNotFoundException {
         Scanner scanner = new Scanner(System.in);
         cookBook = new CookBook();
-        cookBook.loadRecipes();
+        LoadingScreen();
+
         System.out.println("Вітаю тебе у кулінарній книзі\n" +
                 "------------------\n");
         while (true) {
@@ -36,30 +36,61 @@ public class Main {
             int choice = 0;
             try {
                 choice = Integer.parseInt(scanner.nextLine());
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 System.out.println("Ви ввели неправильне число");
+                System.out.println();
             }
-            switch (choice){
+            switch (choice) {
                 case 1:
-                    showAll();
+                    ShowAll();
                     break;
                 case 2:
-                    searchRecipe();
+                    SearchRecipe();
                     break;
                 case 3:
-                    addRecipe();
+                    AddRecipe();
                     break;
                 case 4:
-                    deleteRecipe();
+                    DeleteRecipe();
                     break;
                 case 5:
-                    saveAndExit();
+                    SaveAndExit();
                     return;
             }
         }
     }
 
-    private static void showAll(){
+    private static void LoadingScreen() {
+        Scanner scanner = new Scanner(System.in);
+        boolean s = false;
+        System.out.println("1.Загрузити файл 'recipe.txt'");
+        System.out.println("2.Згенерувати рецепти");
+        int choice = 0;
+        try {
+            choice = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Ви ввели неправильне число");
+            System.out.println();
+        }
+        switch (choice) {
+            case 1:
+                cookBook.loadRecipesWithFile();
+                break;
+            case 2:
+                System.out.println("Скільки хочете сгенерувати рецептів?" + " (" + RecipeGenerator.nameOfRecipe.length + ")");
+                int count = 0;
+                try{
+                    count = Integer.parseInt(scanner.nextLine());
+                }catch (NumberFormatException e){
+                    System.out.println("Ви ввели неправильне число");
+                }
+                cookBook.loadRecipesWithGenerator(count);
+                System.out.println(RecipeGenerator.nameOfRecipe.length + " рецептів згенеровано");
+                break;
+        }
+    }
+
+    private static void ShowAll() {
         List<Recipe> recipes = cookBook.getRecipes();
         Scanner scanner = new Scanner(System.in);
         int count = 0;
@@ -69,26 +100,34 @@ public class Main {
         }
         count = 0;
         int resp = 0;
-        try{
+        try {
             resp = Integer.parseInt(scanner.nextLine());
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             System.out.println("Ви ввели неправильне число");
+            System.out.println();
         }
 
         for (int i = 0; i < recipes.size(); i++) {
-            if (resp == i+1) {
+            if (resp == i + 1) {
                 System.out.println(recipes.get(i));
             }
         }
         scanner.nextLine();
     }
-    private static void searchRecipe(){
+
+    private static void SearchRecipe() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("По скількох продуктах будете шукати? (5)");
-        int choice = Integer.parseInt(scanner.nextLine());
-        switch (choice){
+        System.out.println("По скількох продуктах будете шукати? (4)");
+        int choice = 0;
+        try {
+            choice = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Ви ввели неправильне число");
+            System.out.println();
+        }
+        switch (choice) {
             case 1:
-                searchByOneProducts();
+                searchByOneProduct();
                 break;
             case 2:
                 searchByTwoProducts();
@@ -99,13 +138,11 @@ public class Main {
             case 4:
                 searchByFourProducts();
                 break;
-            case 5:
-                searchByFiveProducts();
-                break;
         }
 
     }
-    private static void addRecipe(){
+
+    private static void AddRecipe() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введіть назву рецепту");
         String name = scanner.nextLine();
@@ -118,25 +155,35 @@ public class Main {
         String product2 = scanner.nextLine();
         System.out.println("Третій");
         String product3 = scanner.nextLine();
+        System.out.println("Четвертий");
+        String product4 = scanner.nextLine();
         cookBook.addRecipes(
-                new Recipe().setName(name).setDescription(discription).addProduct(product1).addProduct(product2).addProduct(product3)
+                new Recipe().setName(name).
+                        setDescription(discription).
+                        addProduct(product1).
+                        addProduct(product2).
+                        addProduct(product3).
+                        addProduct(product4)
         );
-
-//                System.out.println("Четвертий");
-//                String product4 = scanner.nextLine();
-//                System.out.println("П'ятий");
-//                String product5 = scanner.nextLine();
-//                cookBook.addRecipeWithFiveProduct(name,discription,product1,product2,product3,product4,product5);
     }
-    private static void deleteRecipe(){
+
+    private static void DeleteRecipe() {
         List<Recipe> recipes = cookBook.getRecipes();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Що хочете видалити?");
-        for (int i = 0; i < recipes.size(); i++) {
-            System.out.println(i + 1);
-            System.out.println(recipes.get(i));
+        int count = 0;
+        for (Recipe entry : recipes) {
+            count++;
+            System.out.println(count + "." + entry.getName());
         }
-        int resp = Integer.parseInt(scanner.nextLine());
+        count = 0;
+        int resp = 0;
+        try {
+            resp = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Ви ввели неправильне число");
+            System.out.println();
+        }
         for (int i = 0; i < recipes.size(); i++) {
             if (resp == i + 1) {
                 cookBook.deleteRecipe(recipes.get(i));
@@ -144,63 +191,100 @@ public class Main {
         }
         recipes = cookBook.getRecipes();
     }
-    private static void saveAndExit() throws FileNotFoundException {
-        SaveRecipe saveRecipe = new SaveRecipe();
+
+    private static void SaveAndExit() throws FileNotFoundException {
+        SaveRecipe saveRecipe;
         System.out.println("Допобачення");
         saveRecipe = new SaveRecipe();
         saveRecipe.saveToFile(cookBook);
     }
 
-    private static void searchByOneProducts(){
-        int resp = 0;
+    private static void searchByOneProduct() {
+        int product = 0;
         for (int i = 0; i < RecipeGenerator.product.length; i++) {
             System.out.println((i + 1) + "." + RecipeGenerator.product[i]);
         }
         Scanner scanner = new Scanner(System.in);
         try {
-            resp = Integer.parseInt(scanner.nextLine());
-        }catch(NumberFormatException e){
+            product = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
             System.out.println("Ви ввели неправильне число");
         }
-        for (int i = 0; i < RecipeGenerator.product.length; i++) {
-            if (resp == i + 1) {
-                System.out.println(cookBook.getByProduct(RecipeGenerator.product[resp-1]));
-            }
+        if (cookBook.getByProduct(RecipeGenerator.product[product - 1]).isEmpty()){
+            System.out.println("Нічого не знайдено");
+        }
+        else {
+            System.out.println(cookBook.getByProduct(RecipeGenerator.product[product - 1]));
         }
         scanner.nextLine();
     }
-    public static void searchByTwoProducts(){
-        int resp = 0;
-        int resp2 = 0;
-        boolean one = false;
+
+    public static void searchByTwoProducts() {
+        int product1 = 0;
+        int product2 = 0;
         for (int i = 0; i < RecipeGenerator.product.length; i++) {
             System.out.println((i + 1) + "." + RecipeGenerator.product[i]);
         }
         Scanner scanner = new Scanner(System.in);
         try {
-            resp = Integer.parseInt(scanner.nextLine());
-            resp2 = Integer.parseInt(scanner.nextLine());
-        }catch(NumberFormatException e){
+            product1 = Integer.parseInt(scanner.nextLine());
+            product2 = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
             System.out.println("Ви ввели неправильне число");
         }
-        for (int i = 0; i < RecipeGenerator.product.length; i++) {
-            if (resp == i + 1) {
-                one = true;
-            }
-            if (resp2 == i + 1 && one){
-                System.out.println(cookBook.getByTwoProduct(RecipeGenerator.product[resp-1],RecipeGenerator.product[resp2-1]));
-            }
-            one = false;
+        if (cookBook.getByTwoProduct(RecipeGenerator.product[product1 - 1], RecipeGenerator.product[product2 - 1]).isEmpty()){
+            System.out.println("Нічого не знайдено");
+        }else {
+            System.out.println(cookBook.getByTwoProduct(RecipeGenerator.product[product1 - 1], RecipeGenerator.product[product2 - 1]));
         }
         scanner.nextLine();
     }
-    public static void searchByTreeProducts(){
 
+    public static void searchByTreeProducts() {
+        int product1 = 0;
+        int product2 = 0;
+        int product3 = 0;
+        for (int i = 0; i < RecipeGenerator.product.length; i++) {
+            System.out.println((i + 1) + "." + RecipeGenerator.product[i]);
+        }
+        Scanner scanner = new Scanner(System.in);
+        try {
+            product1 = Integer.parseInt(scanner.nextLine());
+            product2 = Integer.parseInt(scanner.nextLine());
+            product3 = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Ви ввели неправильне число");
+        }
+        if (cookBook.getByTreeProduct(RecipeGenerator.product[product1 - 1], RecipeGenerator.product[product2 - 1], RecipeGenerator.product[product3 - 1]).isEmpty()){
+            System.out.println("Нічого не знайдено");
+        }else {
+            System.out.println(cookBook.getByTreeProduct(RecipeGenerator.product[product1 - 1], RecipeGenerator.product[product2 - 1], RecipeGenerator.product[product3 - 1]));
+        }
+        scanner.nextLine();
     }
-    public static void searchByFourProducts(){
 
-    }
-    public static void searchByFiveProducts(){
-
+    public static void searchByFourProducts() {
+        int product1 = 0;
+        int product2 = 0;
+        int product3 = 0;
+        int product4 = 0;
+        for (int i = 0; i < RecipeGenerator.product.length; i++) {
+            System.out.println((i + 1) + "." + RecipeGenerator.product[i]);
+        }
+        Scanner scanner = new Scanner(System.in);
+        try {
+            product1 = Integer.parseInt(scanner.nextLine());
+            product2 = Integer.parseInt(scanner.nextLine());
+            product3 = Integer.parseInt(scanner.nextLine());
+            product4 = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Ви ввели неправильне число");
+        }
+        if (cookBook.getByFourProduct(RecipeGenerator.product[product1 - 1], RecipeGenerator.product[product2 - 1], RecipeGenerator.product[product3 - 1], RecipeGenerator.product[product4 - 1]).isEmpty()){
+            System.out.println("Нічого не знайдено");
+        } else {
+            System.out.println(cookBook.getByFourProduct(RecipeGenerator.product[product1 - 1], RecipeGenerator.product[product2 - 1], RecipeGenerator.product[product3 - 1], RecipeGenerator.product[product4 - 1]));
+        }
+        scanner.nextLine();
     }
 }

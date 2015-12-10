@@ -1,15 +1,19 @@
 package com.neyd.cookbook.cookbook;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
+ * клас рецептів
  * Created by Zheka on 08.12.2015.
  */
 public class Recipe {
+    int id;
     private String name;
     private String description;
-    private Set<String> products = new HashSet<String>();
+    private List<String> products = new ArrayList<String>();
 
     @Override
     public String toString() {
@@ -19,6 +23,18 @@ public class Recipe {
                 "Продукти які потрібні для приготування" + "\n" +
                 products + "\n" +
                 "---------------";
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public Set<String> getProduct() {
+        Set<String> sorted = new HashSet<String>();
+        for (String product : products) {
+            sorted.add(product);
+        }
+        return sorted;
     }
 
     public String getName() {
@@ -39,7 +55,7 @@ public class Recipe {
         return this;
     }
 
-    public Set<String> getProduct() {
+    public List<String> getProductList() {
         return products;
     }
 
