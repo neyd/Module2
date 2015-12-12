@@ -122,6 +122,7 @@ public class Main {
     private static void SearchRecipe() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("По скількох продуктах будете шукати? (4)");
+        System.out.println("(5) Пошук за текстом");
         int choice = 0;
         try {
             choice = Integer.parseInt(scanner.nextLine());
@@ -141,6 +142,9 @@ public class Main {
                 break;
             case 4:
                 searchByFourProducts();
+                break;
+            case 5:
+                searchByText();
                 break;
         }
 
@@ -201,6 +205,12 @@ public class Main {
         System.out.println("Допобачення");
         saveRecipe = new SaveRecipe();
         saveRecipe.saveToFile(cookBook);
+    }
+    private static void searchByText(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введіть який продукт хочете шукати");
+        String product = scanner.nextLine();
+        System.out.println(cookBook.getByProduct(product));
     }
 
     private static void searchByOneProduct() {
